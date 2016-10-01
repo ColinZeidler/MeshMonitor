@@ -4,6 +4,8 @@ from pysnmp.entity.rfc3413 import cmdrsp, context
 from pysnmp.carrier.asyncore.dgram import udp
 from pysnmp.proto.api import v2c
 
+from pysnmpPerfMibs import HostName
+
 # Create SNMP engine
 snmpEngine = engine.SnmpEngine()
 
@@ -36,23 +38,15 @@ MibScalar, MibScalarInstance = mibBuilder.importSymbols(
 )
 
 
-class MyStaticMibScalarInstance(MibScalarInstance):
-    # noinspection PyUnusedLocal,PyUnusedLocal
-    def getValue(self, name, idx):
-        return self.getSyntax().clone(
-            'Python %s running on a %s platform' % (sys.version, sys.platform)
-        )
-
-class HostName(MibScalarInstance):
-    def getValue(self, name, idx):
-        return self.getSyntax().clone(
-            'Host Name: %s' % socket.gethostname()
-        )
-
+#class MyStaticMibScalarInstance(MibScalarInstance):
+#    # noinspection PyUnusedLocal,PyUnusedLocal
+#    def getValue(self, name, idx):
+#        return self.getSyntax().clone(
+#            'Python %s running on a %s platform' % (sys.version, sys.platform)
+#        )
 
 mibBuilder.exportSymbols(
     '__MY_MIB', MibScalar((1, 3, 6, 5, 1), v2c.OctetString()),
-    MyStaticMibScalarInstance((1, 3, 6, 5, 1), (0,), v2c.OctetString()),
     HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString())
 )
 
