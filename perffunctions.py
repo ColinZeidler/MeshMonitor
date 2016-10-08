@@ -19,3 +19,17 @@ def getRamAvail():
 
 def getRamPercent():
 	return psutil.virtual_memory.percent
+
+def getByteSent():
+	a = psutil.net_io_counters(pernic=True)
+	b = {}
+	for nic in a:
+		b[nic] = a[nic].bytes_sent
+	return b
+
+def getByteRecv():
+	a = psutil.net_io_counters(pernic=True)
+	b = {}
+	for nic in a:
+		b[nic] = a[nic].bytes_recv
+	return b
