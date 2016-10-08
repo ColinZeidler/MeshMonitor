@@ -5,6 +5,8 @@ from pysnmp.entity.rfc3413 import cmdrsp, context
 from pysnmp.carrier.asyncore.dgram import udp
 from pysnmp.proto.api import v2c
 
+import perffunctions
+
 
 # Create SNMP engine
 snmpEngine = engine.SnmpEngine()
@@ -46,8 +48,14 @@ class HostName(MibScalarInstance):
 
 class CPUPercent(MibScalarInstance):
 	def getValue(self, name, idx):
+		cpus = perffunctions.getCPUPercent()
+		s = ""
+		for x in range(perffunctions.getCPUCount()):
+			s += "CPU_{} {},".format(x, cpus[x])
+		if name[-1] == 3:
+			s = cpus[0]
 		return self.getSyntax().clone(
-			psutil.cpu_percent(percpu=True)
+			s
 		)
 
 
@@ -55,7 +63,8 @@ class CPUPercent(MibScalarInstance):
 mibBuilder.exportSymbols(
     '__MY_MIB', MibScalar((1, 3, 6, 5, 1), v2c.OctetString()),
     HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString()),
-	CPUPercent((1, 3, 6, 5, 1), (2,), v2c.OctetString())
+	CPUPercent((1, 3, 6, 5, 1), (2,), v2c.OctetString()),
+	CPUPercent((1, 3, 6, 5, 1), (3,), v2c.Integer())
 )
 
 # --- end of Managed Object Instance initialization ----

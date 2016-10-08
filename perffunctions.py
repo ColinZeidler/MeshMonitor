@@ -6,7 +6,9 @@ def getHostName():
 
 psutil.cpu_percent()  # initialize so the first call returns useful data
 def getCPUPercent():
-	return psutil.cpu_percent(percpu=True)
+	a = psutil.cpu_percent(percpu=True)
+	cpus = [int(x*100) for x in a]
+	return cpus
 
 def getCPUCount():
 	return psutil.cpu_count()
@@ -35,4 +37,4 @@ def getByteRecv():
 	return b
 
 def getNicCount():
-	return len(psutil.net_io_counter(pernic=True)
+	return len(psutil.net_io_counter(pernic=True))
