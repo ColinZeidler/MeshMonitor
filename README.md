@@ -11,3 +11,9 @@ SNMP based performance monitor for HSMM-Pi based mesh netowrk
  * Ubuntu / Debian
   * sudo apt-get install gcc python-dev python-pip
   * pip install pysnmp flask psutil
+
+
+testing method:
+sudo python2 simpleAgent.py
+
+snmpwalk -vc2 -c public localhost 1.3.6
