@@ -33,3 +33,6 @@ def getByteRecv():
 	for nic in a:
 		b[nic] = a[nic].bytes_recv
 	return b
+
+def getNicCount():
+	return len(psutil.net_io_counter(pernic=True)
