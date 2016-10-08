@@ -101,7 +101,7 @@ class NetStats(MibScalarInstance):
 			# Per nic download count
 				down = perffunctions.getByteSent()
 				for nic in down:
-					s += "if_{} {}, ".format(nic, down[nic])
+					s += "if_{} {},".format(nic, down[nic])
 		return self.getSyntax().clone(
 			s
 		)
@@ -110,14 +110,14 @@ class NetStats(MibScalarInstance):
 mibBuilder.exportSymbols(
     '__MY_MIB', MibScalar((1, 3, 6, 5, 1), v2c.OctetString()),
     HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString()), # host name
-	CPUStats((1, 3, 6, 5, 1), (2,), v2c.OctetString()), # Description
+	CPUStats((1, 3, 6, 5, 1), (2,), v2c.OctetString()), # CPU DESC
 	CPUStats((1, 3, 6, 5, 1), (2,1,), v2c.Integer()), # CPU Count
 	CPUStats((1, 3, 6, 5, 1), (2,2,), v2c.OctetString()), # Per CPU useage
-	RAMStats((1, 3, 6, 5, 1), (3,), v2c.OctetString()),
+	RAMStats((1, 3, 6, 5, 1), (3,), v2c.OctetString()), # RAM DESC
 	RAMStats((1, 3, 6, 5, 1), (3, 1,), v2c.Integer()),
 	RAMStats((1, 3, 6, 5, 1), (3, 2,), v2c.Integer()),
 	RAMStats((1, 3, 6, 5, 1), (3, 3,), v2c.Integer()),
-	NetStats((1, 3, 6, 5, 1), (4,), v2c.OctetString()),
+	NetStats((1, 3, 6, 5, 1), (4,), v2c.OctetString()), # NET DESC
 	NetStats((1, 3, 6, 5, 1), (4, 1,), v2c.Integer()),
 	NetStats((1, 3, 6, 5, 1), (4, 2,), v2c.OctetString()),
 	NetStats((1, 3, 6, 5, 1), (4, 3,), v2c.OctetString())
