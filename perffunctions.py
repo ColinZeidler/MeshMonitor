@@ -16,11 +16,11 @@ def getCPUCount():
 def getRAMMax():
 	return psutil.virtual_memory().total
 
-def getRamAvail():
-	return psutil.virtual_memory.available
+def getRAMAvail():
+	return psutil.virtual_memory().available
 
-def getRamPercent():
-	return psutil.virtual_memory.percent
+def getRAMPercent():
+	return (psutil.virtual_memory().percent) * 100
 
 def getByteSent():
 	a = psutil.net_io_counters(pernic=True)
@@ -37,4 +37,4 @@ def getByteRecv():
 	return b
 
 def getNicCount():
-	return len(psutil.net_io_counter(pernic=True))
+	return len(psutil.net_io_counters(pernic=True))

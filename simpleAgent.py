@@ -46,25 +46,81 @@ class HostName(MibScalarInstance):
 			socket.gethostname()
 		)
 
-class CPUPercent(MibScalarInstance):
+class CPUStats(MibScalarInstance):
 	def getValue(self, name, idx):
-		cpus = perffunctions.getCPUPercent()
 		s = ""
-		for x in range(perffunctions.getCPUCount()):
-			s += "CPU_{} {},".format(x, cpus[x])
-		if name[-1] == 3:
-			s = cpus[0]
+		if name == (1, 3, 6, 5, 1, 2):
+			s = "CPU Count(1) and Usage(2)"
+		if name[-2] == 2:
+			if name[-1] == 1:
+			# CPU Count
+				s = perffunctions.getCPUCount()
+			elif name[-1] == 2:
+			# CPU usage
+				cpus = perffunctions.getCPUPercent()
+				for x in range(perffunctions.getCPUCount()):
+					s += "CPU_{} {},".format(x, cpus[x])
+		return self.getSyntax().clone(
+			s
+		)
+
+class RAMStats(MibScalarInstance):
+	def getValue(self, name, idx):
+		s = ""
+		if name == (1, 3, 6, 5, 1, 3):
+			s = "RAM Total(1), Available(2), and Usage(3)"
+		if name[-2] == 3:
+			if name[-1] == 1:
+			# Ram Total
+				s = perffunctions.getRAMMax() / 1024
+			elif name[-1] == 2:
+			# Ram Available
+				s = perffunctions.getRAMAvail() / 1024
+			elif name[-1] == 3:
+			# Ram Usage
+				s = perffunctions.getRAMPercent()
+		return self.getSyntax().clone(
+			s
+		)
+
+class NetStats(MibScalarInstance):
+	def getValue(self, name, idx):
+		s = ""
+		if name == (1, 3, 6, 5, 1, 4):
+			s = "Nic Count(1), Nic Upload(2), and Nic Download(3)"
+		elif name[-2] == 4:
+			if name[-1] == 1:
+			# NIC Count
+				s = perffunctions.getNicCount()
+			elif name[-1] == 2:
+			# Per nic upload count
+				up = perffunctions.getByteSent()
+				for nic in up:
+					s += "if_{} {}, ".format(nic, up[nic])
+			elif name[-1] == 3:
+			# Per nic download count
+				down = perffunctions.getByteSent()
+				for nic in down:
+					s += "if_{} {}, ".format(nic, down[nic])
 		return self.getSyntax().clone(
 			s
 		)
 
 
-
 mibBuilder.exportSymbols(
     '__MY_MIB', MibScalar((1, 3, 6, 5, 1), v2c.OctetString()),
-    HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString()),
-	CPUPercent((1, 3, 6, 5, 1), (2,), v2c.OctetString()),
-	CPUPercent((1, 3, 6, 5, 1), (3,), v2c.Integer())
+    HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString()), # host name
+	CPUStats((1, 3, 6, 5, 1), (2,), v2c.OctetString()), # Description
+	CPUStats((1, 3, 6, 5, 1), (2,1,), v2c.Integer()), # CPU Count
+	CPUStats((1, 3, 6, 5, 1), (2,2,), v2c.OctetString()), # Per CPU useage
+	RAMStats((1, 3, 6, 5, 1), (3,), v2c.OctetString()),
+	RAMStats((1, 3, 6, 5, 1), (3, 1,), v2c.Integer()),
+	RAMStats((1, 3, 6, 5, 1), (3, 2,), v2c.Integer()),
+	RAMStats((1, 3, 6, 5, 1), (3, 3,), v2c.Integer()),
+	NetStats((1, 3, 6, 5, 1), (4,), v2c.OctetString()),
+	NetStats((1, 3, 6, 5, 1), (4, 1,), v2c.Integer()),
+	NetStats((1, 3, 6, 5, 1), (4, 2,), v2c.OctetString()),
+	NetStats((1, 3, 6, 5, 1), (4, 3,), v2c.OctetString())
 )
 
 # --- end of Managed Object Instance initialization ----
