@@ -17,7 +17,7 @@ snmpEngine = engine.SnmpEngine()
 config.addTransport(
     snmpEngine,
     udp.domainName,
-    udp.UdpTransport().openServerMode(('127.0.0.1', 161))
+    udp.UdpTransport().openServerMode(('0.0.0.0', 161))
 )
 
 # SNMPv2c setup
