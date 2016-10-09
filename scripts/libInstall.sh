@@ -1,10 +1,11 @@
 #! /bin/bash
 
-sudo apt install python-pip
-sudo apt install python-dev
+echo "apt installing python-pip, python-dev (to compile python libraries), and gcc"
 
-echo "Installing pysnmp"
-`/usr/bin/pip -q install pysnmp` && echo "pysnmp installed"
+sudo apt install python-pip python-dev gcc
+
+echo "Installing pysnmp and psutil"
+`/usr/bin/pip -q install pysnmp psutil` && echo "pysnmp and psutil installed"
 
 if [ "$1" == "Manager" ]; then
 	echo "Installing flask"
