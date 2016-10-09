@@ -2,7 +2,7 @@
 
 echo "apt installing python-pip, python-dev (to compile python libraries), and gcc"
 
-sudo apt install python-pip python-dev gcc
+sudo apt-get install python-pip python-dev gcc
 
 echo "Installing pysnmp and psutil"
 `/usr/bin/pip -q install pysnmp psutil` && echo "pysnmp and psutil installed"
