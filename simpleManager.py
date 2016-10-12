@@ -40,4 +40,4 @@ elif errorStatus:
 	print errorStatus
 else:
 	for i in range(len(varBinds)):
-		print ' = '.join([varBinds[i][1], pDesc[i]])
+		print ' = '.join([pDesc[i], varBinds[i][1].prettyPrint()])
