@@ -39,5 +39,5 @@ if errorIndication:
 elif errorStatus:
 	print errorStatus
 else:
-	for i in len(varBinds):
+	for i in range(len(varBinds)):
 		print ' = '.join(varBinds[i][1], pDesc[i])
