@@ -96,7 +96,7 @@ class NetStats(MibScalarInstance):
 			# Per nic upload count
 				up = perffunctions.getByteSent()
 				for nic in up:
-					s += "if_{} {}, ".format(nic, up[nic])
+					s += "if_{} {},".format(nic, up[nic])
 			elif name[-1] == 3:
 			# Per nic download count
 				down = perffunctions.getByteSent()
