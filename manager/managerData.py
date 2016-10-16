@@ -11,3 +11,5 @@ class Data(object):
 		# [{1: {"host_name": "test", "cpu_count": 3, "cpu_use":[1.4, 0.5, 1.0]},
 		# [{1: {"host_name": "test", "cpu_count": 3, "cpu_use":[8.4, 9.5, 9.0]},
 		# ]
+
+MyData = Data()

@@ -6,7 +6,7 @@
 
 # create cronjob for script if one does not exist
 file="simpleAgent.py"
-cd ../
+cd ../agent/
 mydir=`pwd`
 file="$mydir/$file"
 echo $file
