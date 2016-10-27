@@ -1,0 +1,163 @@
+meshProject OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The name of the group producing the release.  
+          For now this should always be AREDNDev"
+  ::= {bbhndev $i++}
+
+meshRelease OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The version of the mesh"
+  ::= {bbhndev $i++}
+
+olsrRestarts OBJECT-TYPE
+  SYNTAX  Counter
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "Number of OLSR restarts"
+  ::= {bbhndev $i++}
+
+meshLat OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "Node Latitude"
+  ::= {bbhndev $i++}
+
+MeshLong OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "Node Longitude"
+  ::= {bbhndev $i++}
+
+## Fixme: should be for each interface on the node
+bbhndevAntenna         OBJECT IDENTIFIER ::= {bbhndev $i++}
+
+antennaModel OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The model of the antenna in use on the node"
+  ::= {bbhndevAntenna $n=1}
+
+antennaType OBJECT-TYPE
+  SYNTAX  INTEGER {
+                    Sector (1),
+                    Parabolic Dish (2),
+                    Grid Dish (3),
+                    Vertical/Omni (4),
+                  }
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The model of the antenna in use on the node"
+  ::= {bbhndevAntenna $n++}
+
+antennaPolarity OBJECT-TYPE
+  SYNTAX  INTEGER {
+                    Vertical (1),
+                    Horizontal (2),
+                    MIMO H+V (3),
+                    MIMO X-POL (4).
+                  }
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The polarity of the antenna in use on the node"
+  ::= {bbhndevAntenna $n++}
+
+
+antennaGain OBJECT-TYPE
+  SYNTAX  INTEGER {0..128}
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The gain in db of the antenna in use on the node"
+  ::= {bbhndevAntenna $n++}
+
+antennaTilt OBJECT-TYPE
+  SYNTAX  INTEGER {-90..90}
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The antenna tilt. Include electrical tilt in this number"
+  ::= {bbhndevAntenna $n++}
+
+
+antennaBeamWidthHorizontal OBJECT-TYPE
+  SYNTAX  INTEGER {0..360}
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The BeamWidth in the horizontal plane of the antenna in use on the node"
+  ::= {bbhndevAntenna $n++}
+
+antennaBeamWidthVertical OBJECT-TYPE
+  SYNTAX  INTEGER {0..180}
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The BeamWidth in the vertical plane of the antenna in use on the node"
+  ::= {bbhndevAntenna $n++}
+
+
+antennaDirection OBJECT-TYPE
+  SYNTAX  INTEGER {0..35999}
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The direction of the antenna main lobe relative to TRUE NORTH. 0= True North, Move the Decimal two place over (12345=123.45 degrees)"
+  ::= {bbhndevAntenna $n++}
+
+
+#Fixme: should be an array of power source types
+bbhndevPower         OBJECT IDENTIFIER ::= {bbhndev $i++}
+
+powerSource OBJECT-TYPE
+  SYNTAX  INTEGER {
+                    Mains (1),
+                    Motor Driven Generator (2),
+                    Solar (3),
+                    Wind (4),
+                    Hydro Electric (5),
+                    Battery (6),
+                  }
+  ACCESS  read-only
+  STATUS  mandatory
+          "The type of power source"
+  ::= {bbhndevPower $n=1}
+
+powerRuntime OBJECT-TYPE
+  SYNTAX  Integer
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The expected runtime of this power source in an emergency.
+           Generators should report how many hours fuel ON SITE.
+           Batteries should report expected run time.
+           Other sources (Solar/Wind/Hydro) should report average
+           number of hours the source produces electricity per day"
+
+  ::= {bbhndevPower $n++}
+
+powerRechargeTime OBJECT-TYPE
+  SYNTAX  Integer
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The average time it would take to recharge site batteries (if they exist)
+           from cutout to 95% Depth of Discharge.
+           In the case of battereis this would be the average expected time to recharge.
+           All others source types it should be how long that source would take
+           Report 0 if no batteries exist"
+  ::= {bbhndevPower $n++}
