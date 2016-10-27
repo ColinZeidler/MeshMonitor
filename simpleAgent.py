@@ -106,13 +106,70 @@ class NetStats(MibScalarInstance):
 			s
 		)
 
+class MeshInfo(MibScalarInstance):
+    def getValue(self, name, idx):
+        s = ""
+        if name == (1, 3, 6, 5, 1, 0, 0):
+            s = "AREDNDev"
+        elif name[-2] == 0:
+            if name[-1] == 1:
+                s = "v3.16.1.0"
+            elif name[-1] == 2:
+                s = 0
+            elif name[-1] == 3:
+                s = "45 18'N"
+            elif name[-1] == 4:
+                s = "75 39'W"
+            elif name[-1] == 5: # Antenna model
+                s = "Internal Raspberry Pi 3 wifi antenna"
+            elif name[-1] == 6: # Antenna type
+                s = 4
+            elif name[-1] == 7: # antenna polarity unknown
+                s = 2
+            elif name[-1] == 8: # antenna gain unknown
+                s = 0
+            elif name[-1] == 9: # antenna tilt
+                s = 0
+            elif name[-1] == 10: # antenna beam Hwidth
+                s = 360
+            elif name[-1] == 11: # antenna beam Vwidth
+                s = 180
+            elif name[-1] == 12: # antenna direction
+                s = 0
+            elif name[-1] == 13: # power source
+                s = 1
+            elif name[-1] == 14: # power runtime
+                s = 0
+            elif name[-1] == 15: # power recharge
+                s = 0
+            
+        return self.getSyntax().clone(
+            s
+        )
+
 
 mibBuilder.exportSymbols(
     '__MY_MIB', MibScalar((1, 3, 6, 5, 1), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 0), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 1), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 2), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 3), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 4), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 5), v2c.OctetString()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 6), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 7), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 8), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 9), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 10), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 11), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 12), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 13), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 14), v2c.Integer()),
+    MeshInfo((1, 3, 6, 5, 1), (0, 15), v2c.Integer()),
     HostName((1, 3, 6, 5, 1), (1,), v2c.OctetString()), # host name
 	CPUStats((1, 3, 6, 5, 1), (2,), v2c.OctetString()), # CPU DESC
-	CPUStats((1, 3, 6, 5, 1), (2,1,), v2c.Integer()), # CPU Count
-	CPUStats((1, 3, 6, 5, 1), (2,2,), v2c.OctetString()), # Per CPU useage
+	CPUStats((1, 3, 6, 5, 1), (2, 1,), v2c.Integer()), # CPU Count
+	CPUStats((1, 3, 6, 5, 1), (2, 2,), v2c.OctetString()), # Per CPU useage
 	RAMStats((1, 3, 6, 5, 1), (3,), v2c.OctetString()), # RAM DESC
 	RAMStats((1, 3, 6, 5, 1), (3, 1,), v2c.Integer()),
 	RAMStats((1, 3, 6, 5, 1), (3, 2,), v2c.Integer()),
