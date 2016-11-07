@@ -7,17 +7,19 @@ JSON_PORT = 9090
 def createDistMap(systems):
 	"""
 	takes an array for system ips
-	returns a map of system ips and hop counts
+	returns a map of hop distance and ips
+	{3: ['10.1.1.1', '10.1.2.1'],
+	2: ['10.2.1.2']}
 	"""
 	distMap = {}
-	jsonurl = "http://localhost:{port}".format(JSON_PORT)
+	jsonurl = "http://localhost:{port}".format(port=JSON_PORT)
 	r = requests.get(jsonurl)
 	r.raise_for_status()
 
 	j = json.loads(r.text)['routes']
 	for node in j:
 		if node['destination'] in systems:
-			distMap[node['destination']] = node['metric']
+			distMap[node['metric']] = node['destination']
 			print "{ip} is {dist} hops away".format(node['destination'], node['metric'])
 	
 	return distMap
