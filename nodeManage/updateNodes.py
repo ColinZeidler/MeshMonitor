@@ -20,7 +20,7 @@ def createDistMap(systems):
 	for node in j:
 		if node['destination'] in systems:
 			distMap[node['metric']] = node['destination']
-			print "{ip} is {dist} hops away".format(node['destination'], node['metric'])
+			print "{ip} is {dist} hops away".format(ip=node['destination'], dist=node['metric'])
 	
 	return distMap
 
