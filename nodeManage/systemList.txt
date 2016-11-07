@@ -1,0 +1,3 @@
+# List of systems that should be updated
+# Lines starting with '#' will be ignored
+127.0.0.1
