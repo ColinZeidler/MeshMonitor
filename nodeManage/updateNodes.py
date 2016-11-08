@@ -3,6 +3,8 @@ import requests, json
 
 WEB_PORT = 8080
 JSON_PORT = 9090
+UNAME = 'admin'
+PWORD = 'rzeidler'
 
 def createDistMap(systems):
 	"""
@@ -19,8 +21,14 @@ def createDistMap(systems):
 	j = json.loads(r.text)['routes']
 	for node in j:
 		if node['destination'] in systems:
-			distMap[node['metric']] = node['destination']
+			try:
+				distMap[node['metric']].append(node['destination'])
+			except KeyError:
+				distMap[node['metric']] = node['destination']
 			print "{ip} is {dist} hops away".format(ip=node['destination'], dist=node['metric'])
+
+	if 'localhost' in systems or '127.0.0.1' in systems:
+		distMap[0] = 'localhost'
 	
 	return distMap
 
@@ -40,9 +48,13 @@ class NodeConnection(object):
 		print "Logged into {ip} successfully".format(ip=self.ip)
 
 	def updateSettings(self, newSettingMap):
+		settingsurl = "http://{ip}:{port}/hsmm-pi/network_settings/edit/1".format(ip=self.ip, port=WEB_PORT)
 		# read old settings
+		default_settings = {"_method": "PUT", "submit": "save", "data[NetworkSetting][id]": "1"}
 		# apply changes 
+		default_settings.update(newSettingMap)
 		# post in settings
+		r = self.session.post(settingsurl, data = default_settings)
 		pass
 
 	def reboot():
@@ -54,4 +66,18 @@ class NodeConnection(object):
 
 
 if __name__ == "__main__":
-	pass
+	systems = getSystems()
+
+	systems = createDistMap(systems)
+	dist = max(systems.keys())
+	while dist > 0:
+		try:
+			for sys in systems[dist]:
+				node = NodeConnection(sys)
+				#node.login(UNAME, PWORD)
+				newSettings = {}
+				#node.updateSettings(newSettings)
+				#node.reboot()
+		except KeyError:
+			print "No systems {dist} hops away".format(dist=dist)
+		dist -= 1
