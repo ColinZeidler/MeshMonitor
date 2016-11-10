@@ -39,21 +39,22 @@ class NodeConnection(object):
 		self.ip = ip
 		self.session = requests.Session()
 
+		self.loginurl = "http://{ip}:{port}/hsmm-pi/users/login".format(ip=self.ip, port=WEB_PORT)
+		self.rebooturl = "http://{ip}:{port}/hsmm-pi/system".format(ip=self.ip, port=WEB_PORT)
+		self.settingsurl = "http://{ip}:{port}/hsmm-pi/network_settings/edit/1".format(ip=self.ip, port=WEB_PORT)
+
 	def login(self, username, password):
-		loginurl = "http://{ip}:{port}/hsmm-pi/users/login".format(ip=self.ip, port=WEB_PORT)
 		data = {"data[User][username]": username,
                 "data[User][password]": password}
-		r = self.session.post(loginurl, data = data)
+		r = self.session.post(self.loginurl, data = data)
 
 		r.raise_for_status()
 		print "Logged into {ip} successfully".format(ip=self.ip)
 
 	def updateSettings(self, newSettingMap):
-		settingsurl = "http://{ip}:{port}/hsmm-pi/network_settings/edit/1".format(ip=self.ip, port=WEB_PORT)
-
 		# read old settings
 		parser = FormDefaultParser()
-		r = self.session.get(settingsurl)
+		r = self.session.get(self.settingsurl)
 		r.raise_for_status()
 
 		parser.feed(r.text)
@@ -62,12 +63,23 @@ class NodeConnection(object):
 		# apply changes 
 		default_settings.update(newSettingMap)
 		# post in settings
-		r = self.session.post(settingsurl, data = default_settings)
+		r = self.session.post(self.settingsurl, data = default_settings)
+		r.raise_for_status()
+		print "Successfully updated settings"
+
+	def writeDefaultSettings(self, filename):
+		r = self.session.get(self.settingsurl)
 		r.raise_for_status()
 
+		parser = FormDefaultParser()
+		parser.feed(r.text)
+		jdata = json.dumps(parser.form_defaults_map)
+
+		with open(filename, "w") as f:
+			f.write(jdata)
+
 	def reboot():
-		rebooturl = "http://{ip}:{port}/hsmm-pi/system".format(ip=self.ip, port=WEB_PORT)
-		r = self.session.get(rebooturl)
+		r = self.session.get(self.rebooturl)
 
 		r.raise_for_status()
 		print "Reboot request successful, system will reboot in 2 minutes"
@@ -78,11 +90,13 @@ if __name__ == "__main__":
 
 	systems = createDistMap(systems)
 	dist = max(systems.keys())
-	while dist > 0:
+	print systems
+	while dist >= 0:
 		try:
 			for sys in systems[dist]:
 				node = NodeConnection(sys)
-				#node.login(UNAME, PWORD)
+				node.login(UNAME, PWORD)
+				node.writeDefaultSettings("defaults.json")
 				newSettings = {}
 				#node.updateSettings(newSettings)
 				#node.reboot()
