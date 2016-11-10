@@ -1,6 +1,6 @@
 from readSysList import getSystems
 from htmlParsing import FormDefaultParser
-import requests, json
+import requests, json, sys
 
 WEB_PORT = 8080
 JSON_PORT = 9090
@@ -86,6 +86,9 @@ class NodeConnection(object):
 
 
 if __name__ == "__main__":
+	jsonFile = sys.argv[1]
+	with open(jsonFile, "r") as f:
+		jsonSettings = f.read()
 	systems = getSystems()
 
 	systems = createDistMap(systems)
@@ -97,9 +100,9 @@ if __name__ == "__main__":
 				node = NodeConnection(sys)
 				node.login(UNAME, PWORD)
 				node.writeDefaultSettings("defaults.json")
-				newSettings = {}
-				#node.updateSettings(newSettings)
-				#node.reboot()
+				newSettings = json.loads(jsonSettings)
+				node.updateSettings(newSettings)
+				node.reboot()
 		except KeyError:
 			print "No systems {dist} hops away".format(dist=dist)
 		dist -= 1
