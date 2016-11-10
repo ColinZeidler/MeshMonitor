@@ -25,8 +25,12 @@ Is able to update SSID and channel settings that would potentially disconnect no
 ## Usage
  1. cd to MeshMonitor/nodeManage
  1. edit systemList.txt to add the IPs of all the systems you want to update
- 1. run python2 updateNodes.py
- 
+ 1. edit updated_settings.json to modify the settings you want to change
+ 1. edit updateNodes.py and set PWORD to your admin password
+ 1. run python2 updateNodes.py updated_settings.json
+
+All nodes must have the same admin password
+
 ## Libraries in use
  * requests
   * used to interact with the HSMM-Pi web interface to update a nodes settings
