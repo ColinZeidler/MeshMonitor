@@ -46,6 +46,7 @@ class NodeConnection(object):
 	def login(self, username, password):
 		data = {"data[User][username]": username,
                 "data[User][password]": password}
+		print "Logging in"
 		r = self.session.post(self.loginurl, data = data)
 
 		r.raise_for_status()
@@ -54,8 +55,10 @@ class NodeConnection(object):
 	def updateSettings(self, newSettingMap):
 		# read old settings
 		parser = FormDefaultParser()
+		print "Reading default settings"
 		r = self.session.get(self.settingsurl)
 		r.raise_for_status()
+		print "Successfully read defaults"
 
 		parser.feed(r.text)
 		default_settings = parser.form_defaults_map
@@ -63,6 +66,7 @@ class NodeConnection(object):
 		# apply changes 
 		default_settings.update(newSettingMap)
 		# post in settings
+		print "Applying new settings"
 		r = self.session.post(self.settingsurl, data = default_settings)
 		r.raise_for_status()
 		print "Successfully updated settings"
@@ -79,6 +83,7 @@ class NodeConnection(object):
 			f.write(jdata)
 
 	def reboot():
+		print "Rebooting system"
 		r = self.session.get(self.rebooturl)
 
 		r.raise_for_status()
@@ -98,6 +103,7 @@ if __name__ == "__main__":
 	while dist >= 0:
 		try:
 			for sys in systems[dist]:
+				print "connecting to {}".format(sys)
 				node = NodeConnection(sys)
 				node.login(UNAME, PWORD)
 				node.writeDefaultSettings("defaults.json")
