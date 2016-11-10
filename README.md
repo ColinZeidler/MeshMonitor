@@ -6,7 +6,8 @@ SNMP agent for HSMM-Pi node performance reporting
  1. git clone https://github.com/ColinZeidler/MeshMonitor.git
  1. cd MeshMonitor
  1. ./scripts/setupAgent.sh  
- SNMP agent will startup automically when the system is rebooted
+
+SNMP agent will startup automically when the system is rebooted
  
 ### Testing Installation
  1. sudo python2 simpleAgent.py
