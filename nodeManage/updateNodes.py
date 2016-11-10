@@ -25,11 +25,11 @@ def createDistMap(systems):
 			try:
 				distMap[node['metric']].append(node['destination'])
 			except KeyError:
-				distMap[node['metric']] = node['destination']
+				distMap[node['metric']] = [node['destination']]
 			print "{ip} is {dist} hops away".format(ip=node['destination'], dist=node['metric'])
 
 	if 'localhost' in systems or '127.0.0.1' in systems:
-		distMap[0] = 'localhost'
+		distMap[0] = ['localhost']
 	
 	return distMap
 
