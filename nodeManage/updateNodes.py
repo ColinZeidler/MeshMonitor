@@ -89,6 +89,7 @@ if __name__ == "__main__":
 	jsonFile = sys.argv[1]
 	with open(jsonFile, "r") as f:
 		jsonSettings = f.read()
+	newSettings = json.loads(jsonSettings)
 	systems = getSystems()
 
 	systems = createDistMap(systems)
@@ -100,7 +101,6 @@ if __name__ == "__main__":
 				node = NodeConnection(sys)
 				node.login(UNAME, PWORD)
 				node.writeDefaultSettings("defaults.json")
-				newSettings = json.loads(jsonSettings)
 				node.updateSettings(newSettings)
 				node.reboot()
 		except KeyError:
