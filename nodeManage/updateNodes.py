@@ -1,4 +1,5 @@
 from readSysList import getSystems
+from htmlParsing import FormDefaultParser
 import requests, json
 
 WEB_PORT = 8080
@@ -49,13 +50,20 @@ class NodeConnection(object):
 
 	def updateSettings(self, newSettingMap):
 		settingsurl = "http://{ip}:{port}/hsmm-pi/network_settings/edit/1".format(ip=self.ip, port=WEB_PORT)
+
 		# read old settings
-		default_settings = {"_method": "PUT", "submit": "save", "data[NetworkSetting][id]": "1"}
+		parser = FormDefaultParser()
+		r = self.session.get(settingsurl)
+		r.raise_for_status()
+
+		parser.feed(r.text)
+		default_settings = parser.form_defaults_map
+
 		# apply changes 
 		default_settings.update(newSettingMap)
 		# post in settings
 		r = self.session.post(settingsurl, data = default_settings)
-		pass
+		r.raise_for_status()
 
 	def reboot():
 		rebooturl = "http://{ip}:{port}/hsmm-pi/system".format(ip=self.ip, port=WEB_PORT)
