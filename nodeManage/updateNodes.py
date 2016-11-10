@@ -82,7 +82,7 @@ class NodeConnection(object):
 		with open(filename, "w") as f:
 			f.write(jdata)
 
-	def reboot():
+	def reboot(self):
 		print "Rebooting system"
 		r = self.session.get(self.rebooturl)
 
