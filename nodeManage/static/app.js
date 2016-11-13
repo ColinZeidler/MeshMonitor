@@ -7,11 +7,17 @@ $(document).ready(function(){
 	var nodes = [];
 		
 	$.get("/nodes", function(data) {
-		nodes.push(JSON.parse(data))
+		var t = JSON.parse(data);
+		for (var i = 0; i< t.length; i++) {
+			nodes.push(t[i]);
+		}
 		console.log(nodes);
 	});
 	$.get("/topology", function(data) {
-		links.push(JSON.parse(data));
+		var t = JSON.parse(data);
+		for (var i = 0; i < t.length; i ++) {
+			links.push(t[i]);
+		}
 		console.log(links);
 	});
 	$("button").click(function() {

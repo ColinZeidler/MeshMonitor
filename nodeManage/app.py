@@ -19,7 +19,6 @@ def node_list():
 			line = line.strip()
 			line = line.split("#")[0]
 			if line != '':
-				print line
 				line = line.split()
 				if line[1] != 'localhost':
 					item[line[0]] = line[1]
