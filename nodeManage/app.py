@@ -1,14 +1,17 @@
 from flask import Flask, request
+from nodeMapping import createDistMap, createTopologyMap
+import json
 app = Flask(__name__)
+
 
 @app.route('/topology')
 def topo_map():
 	'''
 	returns a list of connection objects
-	{ 'source': 'ip', 'dest': 'ip',
-	  'link_type': 'eth / wifi', 'link_cost': 1.4}
+	{ 'source': 'ip', 'dest': 'ip'}
 	'''
-	pass
+	return json.dumps(createTopologyMap())
+
 
 @app.route('/configure', methods=['POST'])
 def configure_nodes():
@@ -17,4 +20,27 @@ def configure_nodes():
 	{'127.0.0.1': {'username': 'test', 'password': 'testing'}}
 	'''
 	new_options = request.form['options']
-	systems = request.form['systems']
+	systems_d = request.form['systems']
+
+	systems = systems_d.keys()
+
+	systems = createDistMap(systems)
+	dist = max (systems.keys())
+	while dist >= 0:
+		try:
+			for sys in systems[dist]:
+				node = NodeConnection(sys)
+				node.login(systems_d[sys]['username'], systems_d[sys][password])
+				node.updateSettings(new_options)
+				node.reboot()
+				# TODO handle connection errors
+		except KeyError:
+			# no need to do anything
+			pass
+		dist -= 1
+	return "success"
+
+
+@app.route('/')
+def index_page():
+	pass

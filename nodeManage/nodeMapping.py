@@ -1,4 +1,8 @@
+import requests
+
 JSON_PORT = 9090
+jsonurl = "http://localhost:{port}".format(port=JSON_PORT)
+
 
 def createDistMap(systems):
 	"""
@@ -8,7 +12,6 @@ def createDistMap(systems):
 	2: ['10.2.1.2']}
 	"""
 	distMap = {}
-	jsonurl = "http://localhost:{port}".format(port=JSON_PORT)
 	r = requests.get(jsonurl)
 	r.raise_for_status()
 
@@ -28,4 +31,15 @@ def createDistMap(systems):
 
 
 def createTopologyMap():
-	pass
+	topo_list = []
+	r = requests.get(jsonurl)
+	r.raise_for_status()
+	
+	j = json.loads(r.text)['topology']
+	for item in j:
+		connection = {}
+		connection['source'] = item['lastHopIP']
+		connection['dest'] = item['destinationIP']
+		topo_list.append(connection)
+
+	return topo_list
