@@ -2,17 +2,12 @@ $(document).ready(function(){
 	var svg = d3.select("svg");
 	var width = +svg.attr("width");
 	var height = +svg.attr("height");
-
-	var links = [];
-	var nodes = [];
-		
-	$.get("/nodes", function(data) {
-		var t = JSON.parse(data);
-		for (var i = 0; i< t.length; i++) {
-			nodes.push(t[i]);
-		}
-		console.log(nodes);
-	});
+	
+	var sim = d3.forceSimulation()
+		.force("link", d3.forceLink().id(function(d) { return d.id; }))
+		.force("charge", d3.forceManyBody())
+		.force("center", d3.forceCenter(width/2, height/2));
+	
 	$.get("/topology", function(data) {
 		var t = JSON.parse(data);
 		for (var i = 0; i < t.length; i ++) {
@@ -20,14 +15,15 @@ $(document).ready(function(){
 		}
 		console.log(links);
 	});
+	d3.json("/nodes", function(error, n) {
+		sim.nodes(n).on("tick", tick);
+	});
+	d3.json("/topology", function(error, t) {
+		sim.force("link").links(t);
+	});
 	$("button").click(function() {
 
 	});
-	
-	var sim = d3.forceSimulation()
-		.force("link", d3.forceLink().id(function(d) { return d.id; }))
-		.force("charge", d3.forceManyBody())
-		.force("center", d3.forceCenter(width/2, height/2));
 
 
 	var node = svg.append("g")
@@ -44,9 +40,6 @@ $(document).ready(function(){
 		.data(links)
 		.enter().append("line")
 			.attr("class", "link");
-
-	sim.nodes(nodes).on("tick", tick);
-	sim.force("link").links(links);
 
 	function tick() {
 		node.attr("cx", function(d) { return d.x; })
