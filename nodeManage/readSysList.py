@@ -1,5 +1,5 @@
 
-listFile = "systemList.txt"
+listFile = "misc/systemList.txt"
 
 def getSystems():
 	systems = []
