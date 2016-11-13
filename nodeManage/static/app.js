@@ -8,21 +8,21 @@ $(document).ready(function(){
 		.force("charge", d3.forceManyBody())
 		.force("center", d3.forceCenter(width/2, height/2));
 	
+	var node = svg.append("g")
+		.attr("class", "nodes")
+		.selectAll("circle");
+	var link = svg.append("g")
+		.attr("class", "links")
+		.selectAll("line");
 	d3.json("/nodes", function(error, n) {
-		var node = svg.append("g")
-			.attr("class", "nodes")
-			.selectAll("circle")
-			.data(n)
+			node.data(n)
 			.enter().append("circle")
 				.attr("r", 30)
 				.attr("class", "node");
 		sim.nodes(n).on("tick", tick);
 	});
 	d3.json("/topology", function(error, t) {
-		var link = svg.append("g")
-			.attr("class", "links")
-			.selectAll("line")
-			.data(t)
+			link.data(t)
 			.enter().append("line")
 				.attr("class", "link");
 		sim.force("link").links(t);
