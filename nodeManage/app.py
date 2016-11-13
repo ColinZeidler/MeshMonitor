@@ -4,6 +4,29 @@ import json
 app = Flask(__name__)
 
 
+@app.route('/nodes')
+def node_list():
+	'''
+	returns a list of node objects:
+	{'ip': 'hostname'}
+	'''
+	olsr_host_f = "/var/run/hosts_olsr"
+
+	nodes = []
+	with open(olsr_host_f, 'r') as f:
+		for line in f:
+			item = {}
+			line = line.strip()
+			line = line.split("#")[0]
+			if line != '':
+				print line
+				line = line.split()
+				if line[1] != 'localhost':
+					item[line[0]] = line[1]
+					nodes.append(item)
+
+	return json.dumps(nodes)
+
 @app.route('/topology')
 def topo_map():
 	'''
