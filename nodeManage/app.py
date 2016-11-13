@@ -31,7 +31,7 @@ def node_list():
 def topo_map():
 	'''
 	returns a list of connection objects
-	{ 'source': 'ip', 'dest': 'ip'}
+	{ 'source': 'ip', 'target': 'ip'}
 	'''
 	return json.dumps(createTopologyMap())
 
