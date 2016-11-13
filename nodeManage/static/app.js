@@ -2,9 +2,6 @@ $(document).ready(function(){
 	var svg = d3.select("svg");
 	var width = +svg.attr("width");
 	var height = +svg.attr("height");
-
-	console.log(width)
-	console.log(height)
 	
 	var sim = d3.forceSimulation()
 		.force("link", d3.forceLink().id(function(d) { return d.id; }))

@@ -8,7 +8,7 @@ app = Flask(__name__)
 def node_list():
 	'''
 	returns a list of node objects:
-	{'ip': 'hostname'}
+	{'id': 'ip','name': 'hostname'}
 	'''
 	olsr_host_f = "/var/run/hosts_olsr"
 
@@ -21,7 +21,8 @@ def node_list():
 			if line != '':
 				line = line.split()
 				if line[1] != 'localhost':
-					item[line[0]] = line[1]
+					item['id'] = line[0]
+					item['name'] = line[1]
 					nodes.append(item)
 
 	return json.dumps(nodes)
@@ -30,7 +31,7 @@ def node_list():
 def topo_map():
 	'''
 	returns a list of connection objects
-	{ 'source': 'ip', 'target': 'ip'}
+	{'source': 'ip', 'target': 'ip'}
 	'''
 	return json.dumps(createTopologyMap())
 
