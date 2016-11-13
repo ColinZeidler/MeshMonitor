@@ -8,38 +8,28 @@ $(document).ready(function(){
 		.force("charge", d3.forceManyBody())
 		.force("center", d3.forceCenter(width/2, height/2));
 	
-	$.get("/topology", function(data) {
-		var t = JSON.parse(data);
-		for (var i = 0; i < t.length; i ++) {
-			links.push(t[i]);
-		}
-		console.log(links);
-	});
 	d3.json("/nodes", function(error, n) {
+		var node = svg.append("g")
+			.attr("class", "nodes")
+			.selectAll("circle")
+			.data(n)
+			.enter().append("circle")
+				.attr("r", 30)
+				.attr("class", "node");
 		sim.nodes(n).on("tick", tick);
 	});
 	d3.json("/topology", function(error, t) {
+		var link = svg.append("g")
+			.attr("class", "links")
+			.selectAll("line")
+			.data(links)
+			.enter().append("line")
+				.attr("class", "link");
 		sim.force("link").links(t);
 	});
 	$("button").click(function() {
 
 	});
-
-
-	var node = svg.append("g")
-		.attr("class", "nodes")
-		.selectAll("circle")
-		.data(nodes)
-		.enter().append("circle")
-			.attr("r", 30)
-			.attr("class", "node");
-
-	var link = svg.append("g")
-		.attr("class", "links")
-		.selectAll("line")
-		.data(links)
-		.enter().append("line")
-			.attr("class", "link");
 
 	function tick() {
 		node.attr("cx", function(d) { return d.x; })
