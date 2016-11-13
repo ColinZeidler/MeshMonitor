@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 JSON_PORT = 9090
 jsonurl = "http://localhost:{port}".format(port=JSON_PORT)
