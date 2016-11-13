@@ -9,12 +9,10 @@ $(document).ready(function(){
 	$.get("/nodes", function(data) {
 		nodes.push(JSON.parse(data))
 		console.log(nodes);
-		start();
 	});
 	$.get("/topology", function(data) {
 		links.push(JSON.parse(data));
 		console.log(links);
-		start();
 	});
 	$("button").click(function() {
 
