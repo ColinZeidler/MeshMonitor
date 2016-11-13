@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from nodeMapping import createDistMap, createTopologyMap
 import json
 app = Flask(__name__)
@@ -43,4 +43,4 @@ def configure_nodes():
 
 @app.route('/')
 def index_page():
-	pass
+	return render_template("index.html")
