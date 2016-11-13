@@ -67,3 +67,7 @@ def configure_nodes():
 @app.route('/')
 def index_page():
 	return render_template("index.html")
+
+
+if __name__ == "__main__":
+	app.run('0.0.0.0')
