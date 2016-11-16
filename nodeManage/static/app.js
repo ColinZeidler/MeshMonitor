@@ -11,36 +11,39 @@ d3.json("/nodes", function(error, n) {
 	d3.json("/topology", function(error, t) {
 	console.log(n)
 	console.log(t)
-	var node = svg.append("g")
-		.attr("class", "nodes")
-		.selectAll("circle")
-		.data(n)
-		.enter().append("circle")
-			.attr("r", 30)
-			.attr("class", "node");
 	var link = svg.append("g")
 		.attr("class", "links")
 		.selectAll("line")
 		.data(t)
 		.enter().append("line")
-			.attr("class", "link").on("click", node_click);
+			.attr("class", "link");
+
+	var node = svg.append("g")
+		.attr("class", "nodes")
+		.selectAll("circle")
+		.data(n)
+		.enter().append("circle")
+			.attr("r", 5)
+			.attr("class", "node").on("click", node_click).text(function(d) { return d.name; });
+		node.append("name").text(function(d) { return d.name; });
 
 		sim.nodes(n).on("tick", tick);
 		sim.force("link").links(t);
 		
 	function tick() {
+		console.log("tick");
 		node.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
+			.attr("cy", function(d) { return d.y; });
 
 		link.attr("x1", function(d) { return d.source.x; })
 			.attr("y1", function(d) { return d.source.y; })
 			.attr("x2", function(d) { return d.target.x; })
-			.attr("y2", function(d) { return d.target.y; })
+			.attr("y2", function(d) { return d.target.y; });
 	}
 	});
 });
 
 
-function node_click() {
-	alert(function(d) { return d.name });
+function node_click(d) {
+	alert(d.name);
 }
