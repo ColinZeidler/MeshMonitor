@@ -18,7 +18,7 @@ def node_list():
 			item = {}
 			line = line.strip()
 			line = line.split("#")[0]
-			if line != '':
+			if line != '' and 'mid1.' not in line and 'dtdlink.' not in line:
 				line = line.split()
 				if line[1] != 'localhost':
 					item['id'] = line[0]
