@@ -20,20 +20,30 @@ d3.json("/nodes", function(error, n) {
 
 	var node = svg.append("g")
 		.attr("class", "nodes")
-		.selectAll("circle")
+		.selectAll(".node")
 		.data(n)
-		.enter().append("circle")
+		.enter().append("g")
+			.attr("class", "node")
+
+		node.append("circle")
 			.attr("r", 5)
-			.attr("class", "node").on("click", node_click).text(function(d) { return d.name; });
-		node.append("name").text(function(d) { return d.name; });
+			.on("click", node_click).text(function(d) { return d.name; });
+		node.append("text")
+			.attr("dx", 10)
+			.attr("dy", ".35em")
+			.text(function(d) { return d.name; });
 
 		sim.nodes(n).on("tick", tick);
 		sim.force("link").links(t);
 		
 	function tick() {
 		console.log("tick");
-		node.attr("cx", function(d) { return d.x; })
+		d3.selectAll("circle")
+			.attr("cx", function(d) { return d.x; })
 			.attr("cy", function(d) { return d.y; });
+		d3.selectAll("text")
+			.attr("x", function(d) { return d.x; })
+			.attr("y", function(d) { return d.y; });
 
 		link.attr("x1", function(d) { return d.source.x; })
 			.attr("y1", function(d) { return d.source.y; })
@@ -42,7 +52,6 @@ d3.json("/nodes", function(error, n) {
 	}
 	});
 });
-
 
 function node_click(d) {
 	alert(d.name);

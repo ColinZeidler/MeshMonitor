@@ -4,7 +4,13 @@
 	stroke-width: 1.5px;
 }
 
+.node text {
+	fill: #000;
+	stroke-width: 0;
+}
+
 .link {
 	stroke: #000;
 	stroke-width: 1.5px;
 }
+
