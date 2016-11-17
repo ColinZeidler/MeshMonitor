@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from nodeMapping import createDistMap, createTopologyMap
-import json
+import json, requests
 app = Flask(__name__)
 
 
@@ -12,18 +12,35 @@ def node_list():
 	'''
 	olsr_host_f = "/var/run/hosts_olsr"
 
-	nodes = []
+	topo_nodes = {}
+	r = requests.get("http://localhost:9090")
+	j = json.loads(r.text)['topology']
+	for n in j:
+		topo_nodes[n['destinationIP']] = n['destinationIP']
+		topo_nodes[n['lastHopIP']] = n['lastHopIP']
+	
+	nodes = {}
 	with open(olsr_host_f, 'r') as f:
 		for line in f:
 			item = {}
-			line = line.strip()
-			line = line.split("#")[0]
+			line = line.strip().split("#")[0]
 			if line != '' and 'mid1.' not in line and 'dtdlink.' not in line:
 				line = line.split()
 				if line[1] != 'localhost':
-					item['id'] = line[0]
-					item['name'] = line[1]
-					nodes.append(item)
+					nodes[line[0]] = line[1]
+
+	for k in topo_nodes.keys():
+		try:
+			topo_nodes[k] = nodes[k]
+		except KeyError:
+			pass # nothing to do
+
+	nodes = []
+	for k in topo_nodes.keys():
+		item = {}
+		item['id'] = k
+		item['name'] = topo_nodes[k]
+		nodes.append(item)
 
 	return json.dumps(nodes)
 
