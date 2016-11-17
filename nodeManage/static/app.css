@@ -1,5 +1,5 @@
 .node {
-	fill: #aaa;
+	fill: #fff;
 	stroke: #000;
 	stroke-width: 1.5px;
 }
@@ -9,8 +9,15 @@
 	stroke-width: 0;
 }
 
+.node .selected {
+	fill: #960c0c;
+}
+
 .link {
 	stroke: #000;
 	stroke-width: 1.5px;
 }
 
+svg {
+	background-color: #aeb0b2;
+}

@@ -26,7 +26,7 @@ d3.json("/nodes", function(error, n) {
 			.attr("class", "node")
 
 		node.append("circle")
-			.attr("r", 5)
+			.attr("r", 7)
 			.on("click", node_click).text(function(d) { return d.name; });
 		node.append("text")
 			.attr("dx", 10)
@@ -37,7 +37,6 @@ d3.json("/nodes", function(error, n) {
 		sim.force("link").links(t);
 		
 	function tick() {
-		console.log("tick");
 		d3.selectAll("circle")
 			.attr("cx", function(d) { return d.x; })
 			.attr("cy", function(d) { return d.y; });
@@ -54,5 +53,13 @@ d3.json("/nodes", function(error, n) {
 });
 
 function node_click(d) {
-	alert(d.name);
+	d3.select(this).attr("class", 
+		function() {  
+			if (d3.select(this).attr("class") == "selected") {
+				return "";
+			} else {
+				return "selected";
+			}
+		});
+//	alert(d.name);
 }
