@@ -1,6 +1,6 @@
 from readSysList import getSystems
 from htmlParsing import FormDefaultParser
-from nodeMapping import createDistmap
+from nodeMapping import createDistMap
 import requests, json, sys
 
 WEB_PORT = 8080
