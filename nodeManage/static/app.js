@@ -56,10 +56,21 @@ function node_click(d) {
 	d3.select(this).attr("class", 
 		function() {  
 			if (d3.select(this).attr("class") == "selected") {
+				delNodeUserDiv(d.id);
 				return "";
 			} else {
+				addNodeUserDiv(d.id, d.name);
 				return "selected";
 			}
 		});
 //	alert(d.name);
+}
+
+function addNodeUserDiv(nodeID, nodeName) {
+	$('#nodeLogins').html($('#nodeLogins').html() + "<form id='" + nodeID +"'>"
++nodeName +"<br>UserName <input type='text' name='uname'><br>Password <input type='text' name='passw'></form>");
+}
+
+function delNodeUserDiv(nodeID) {
+	$('form[id="'+ nodeID+'"]').remove();
 }
