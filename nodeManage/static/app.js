@@ -1,3 +1,4 @@
+$( document ).ready(function() {
 var svg = d3.select("svg");
 var width = +svg.attr("width");
 var height = +svg.attr("height");
@@ -67,10 +68,40 @@ function node_click(d) {
 }
 
 function addNodeUserDiv(nodeID, nodeName) {
-	$('#nodeLogins').html($('#nodeLogins').html() + "<form id='" + nodeID +"'>"
-+nodeName +"<br>UserName <input type='text' name='uname'><br>Password <input type='text' name='passw'></form>");
+	$('#nodeLogins').html($('#nodeLogins').html() + "<form class='logform' id='" + nodeID +"'>"
++nodeName +"<br>UserName:<br><input type='text' name='username'><br>Password:<br><input type='password' name='password'></form>");
 }
 
 function delNodeUserDiv(nodeID) {
 	$('form[id="'+ nodeID+'"]').remove();
 }
+
+$('#submit').on('click', function() {
+	var dataObject = {};
+	dataObject.options = {};
+	dataObject.systems = [];
+	$('.logform').each(function() {
+		var myID = $(this)[0].id;
+		var temp = {};
+		temp[myID] = {};
+		$( 'form[id="'+ myID +'"] :input').each(function() {
+			temp[myID][$(this)[0].name] = $(this)[0].value;
+		});
+		dataObject.systems.push(temp);
+	});
+	$('#options :input').each(function() {
+		var v = $(this)[0].value;
+		if ($(this)[0].name == 'secure_enable') {
+			v = $(this)[0].checked;
+		}
+		dataObject.options[$(this)[0].name] = v;
+	});
+	console.log(dataObject);
+//	$.post("/configure", dataObject);
+});
+
+$('#os_check').on('click', function() {
+	$('#os_input').prop('disabled', function(i, v) { return !v; });
+});
+
+});
