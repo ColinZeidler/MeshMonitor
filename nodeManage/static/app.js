@@ -79,25 +79,24 @@ function delNodeUserDiv(nodeID) {
 $('#submit').on('click', function() {
 	var dataObject = {};
 	dataObject.options = {};
-	dataObject.systems = [];
+	dataObject.systems = {};
 	$('.logform').each(function() {
 		var myID = $(this)[0].id;
-		var temp = {};
-		temp[myID] = {};
+		dataObject.systems[myID] = {};
 		$( 'form[id="'+ myID +'"] :input').each(function() {
-			temp[myID][$(this)[0].name] = $(this)[0].value;
+			dataObject.systems[myID][$(this)[0].name] = $(this)[0].value;
 		});
-		dataObject.systems.push(temp);
 	});
 	$('#options :input').each(function() {
 		var v = $(this)[0].value;
 		if ($(this)[0].name == 'secure_enable') {
-			v = $(this)[0].checked;
+			v = $(this)[0].checked ? 1: 0;
 		}
 		dataObject.options[$(this)[0].name] = v;
 	});
 	console.log(dataObject);
-//	$.post("/configure", dataObject);
+	$.post("/configure", {options: JSON.stringify(dataObject.options), 
+		systems: JSON.stringify(dataObject.systems)});
 });
 
 $('#os_check').on('click', function() {

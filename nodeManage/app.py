@@ -1,7 +1,19 @@
 from flask import Flask, request, render_template
 from nodeMapping import createDistMap, createTopologyMap
+from updateNodes import NodeConnection
 import json, requests
 app = Flask(__name__)
+
+import socket
+import fcntl
+import struct
+def getIP(ifname):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	return socket.inet_ntoa(fcntl.ioctl(
+		s.fileno(), 0x8915, struct.pack('256s', ifname[:15])
+	)[20:24])
+
+wlanIP = getIP('wlan0')
 
 
 @app.route('/nodes')
@@ -59,19 +71,31 @@ def configure_nodes():
 	systems sould be an ip, with an associated username and password
 	{'127.0.0.1': {'username': 'test', 'password': 'testing'}}
 	'''
+	print request.form
 	new_options = request.form['options']
+	new_options = json.loads(new_options)
+	rpi_options = {
+		"data[NetworkSetting][wan_dns2]": new_options['dns2'], 
+		"data[NetworkSetting][wifi_channel]": new_options['channel'], 
+		"data[NetworkSetting][ntp_server]": new_options['ntp'], 
+		"data[NetworkSetting][mesh_olsrd_secure]": new_options['secure_enable'],
+		"data[NetworkSetting][wan_dns1]": new_options['dns2'], 
+		"data[NetworkSetting][wifi_ssid]": new_options['ssid'], 
+		"data[NetworkSetting][mesh_olsrd_secure_key]": new_options['secure_key']
+		}
 	systems_d = request.form['systems']
+	systems_d = json.loads(systems_d)
 
 	systems = systems_d.keys()
 
-	systems = createDistMap(systems)
+	systems = createDistMap(systems, wlanIP)
 	dist = max (systems.keys())
 	while dist >= 0:
 		try:
 			for sys in systems[dist]:
 				node = NodeConnection(sys)
-				node.login(systems_d[sys]['username'], systems_d[sys][password])
-				node.updateSettings(new_options)
+				node.login(systems_d[sys]['username'], systems_d[sys]['password'])
+				node.updateSettings(rpi_options)
 				node.reboot()
 				# TODO handle connection errors
 		except KeyError:

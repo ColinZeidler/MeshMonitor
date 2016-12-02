@@ -4,7 +4,7 @@ JSON_PORT = 9090
 jsonurl = "http://localhost:{port}".format(port=JSON_PORT)
 
 
-def createDistMap(systems):
+def createDistMap(systems, wlanIP='127.0.0.1'):
 	"""
 	takes an array for system ips
 	returns a map of hop distance and ips
@@ -24,8 +24,11 @@ def createDistMap(systems):
 				distMap[node['metric']] = [node['destination']]
 			print "{ip} is {dist} hops away".format(ip=node['destination'], dist=node['metric'])
 
+	# we should also check what our wan0 address is
 	if 'localhost' in systems or '127.0.0.1' in systems:
 		distMap[0] = ['localhost']
+	elif wlanIP in systems:
+		distMap[0] = [wlanIP]
 	
 	return distMap
 
