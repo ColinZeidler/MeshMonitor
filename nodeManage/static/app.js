@@ -35,8 +35,8 @@ d3.json("/nodes", function(error, n) {
 			.text(function(d) { return d.name; });
 
 		sim.nodes(n).on("tick", tick);
-		sim.force("link").links(t);
-		
+		sim.force("link").links(t).distance(75);
+
 	function tick() {
 		d3.selectAll("circle")
 			.attr("cx", function(d) { return d.x; })
