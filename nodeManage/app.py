@@ -71,7 +71,6 @@ def configure_nodes():
 	systems sould be an ip, with an associated username and password
 	{'127.0.0.1': {'username': 'test', 'password': 'testing'}}
 	'''
-	print request.form
 	new_options = request.form['options']
 	new_options = json.loads(new_options)
 	rpi_options = {

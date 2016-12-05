@@ -35,7 +35,6 @@ class NodeConnection(object):
 
 		parser.feed(r.text)
 		default_settings = parser.form_defaults_map
-
 		# apply changes 
 		default_settings.update(newSettingMap)
 		# post in settings
@@ -79,7 +78,7 @@ if __name__ == "__main__":
 				print "connecting to {}".format(sys)
 				node = NodeConnection(sys)
 				node.login(UNAME, PWORD)
-				node.writeDefaultSettings("defaults.json")
+				#node.writeDefaultSettings("defaults.json")
 				node.updateSettings(newSettings)
 				node.reboot()
 		except KeyError:
